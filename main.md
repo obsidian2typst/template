@@ -9,11 +9,11 @@
 
 # Introduction
 
-This report is an example of what the template can do. It was written as plain notes in Obsidian [@ObsidianSharpenYour] and typeset with Typst [@Typst], which reads the markdown through the cmarker package [@CmarkerTypstUniverse]. Every feature shown in [@writing-your-report] is written the same way you would write any other Obsidian note.
+This manual is an example of what the template can do. It was written as plain notes in Obsidian [@ObsidianSharpenYour] and typeset with Typst [@Typst], which reads the markdown through the cmarker package [@CmarkerTypstUniverse]. Every feature shown in [@writing-your-manual] is written the same way you would write any other Obsidian note.
 
 ![Background and Motivation](</docs/Background.md>)
 
-# Writing Your Report
+# Writing Your Manual
 
 Each section of this chapter is a separate note in the `docs/` folder, embedded here with a single line. The note's file name becomes the section heading, and its own headings are moved one level down to fit underneath.
 
@@ -31,11 +31,11 @@ Each section of this chapter is a separate note in the `docs/` folder, embedded 
 
 # Conclusion
 
-The template turns ordinary Obsidian notes into a structured report with a title page, table of contents, numbered sections and figures, callouts, maths and a reference list, as shown in [@introduction] to [@hiding-content-and-raw-typst].
+The template turns ordinary Obsidian notes into a structured manual with a cover, table of contents, numbered sections and figures, callouts, maths and a reference list, as shown in [@introduction] to [@hiding-content-and-raw-typst].
 
-To start your own report:
+To start your own manual:
 
-1. Fill in the title page in `main.typ`.
+1. Fill in the title, version and author in `main.typ`.
 2. Replace the notes in `docs/` with your own sections and embed them in `main.md`.
 3. Add your sources to `citations/references.bib` through Zotero.
 4. Run `./toolbox.sh watch` and write.

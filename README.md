@@ -1,5 +1,11 @@
 # obsidian.typ
 
+> **This is the `user-manual` branch.** It's the same template as `main`, but the PDF is laid out as a user manual with the [ilkman](https://typst.app/universe/package/ilkman) template: a cover page, "Chapter 1" headings, running headers, note boxes for callouts and the IBM Plex fonts. To use it, click **Use this template** with **Include all branches** ticked, or clone this branch:
+>
+> ```
+> git clone -b user-manual https://github.com/obsidian2typst/template
+> ```
+
 Write your notes in [Obsidian](https://obsidian.md). Get a properly formatted PDF from them with [Typst](https://typst.app): title page, table of contents, callouts, figures, citations and a reference list.
 
 You write normal Obsidian markdown in `main.md` (and any other notes you link in), run one script, and get `main.pdf`.
@@ -298,19 +304,35 @@ What this template adds:
 
 `main.typ` controls what goes into the PDF and how it looks. Open it in any text editor, such as Notepad, TextEdit or [VS Code](https://code.visualstudio.com). Obsidian lists the file but can't edit it.
 
-### Title page
+### Cover and layout
 
 ```typst
-#show: it => basic-report(
-  doc-category: "Assignment",
-  doc-title: "My Report",
+#let palette = "okyanus"
+
+#show: im-doc.with(
+  lang: "en",
+  title: [obsidian.typ],
+  subtitle: [User Manual],
   author: "Your Name",
-  language: "en",
-  it,
+  version: "Version 1.0",
+  fonts: "plex",
+  colors: palette,
+  ...
 )
+
+#im-cover(style: "minimap", series: "Documentation")
 ```
 
-Replace the example values with your own. The layout comes from the [basic-report](https://typst.app/universe/package/basic-report) package; its page lists every option.
+Replace the example values with your own. Useful things to change:
+
+- **Colours:** set `palette` to one of `okyanus` (blue), `fiyort`, `gece`, `celik`, `okabe` (colour-blind safe), `orman` (green), `nane`, `zeytin`, `kiremit`, `kehribar`, `gul`, `bordo`, `lavanta`, `murdum` or `grafit` (grey).
+- **Cover artwork:** `style:` can be `waveform`, `pcm`, `packet`, `bits`, `gitgraph`, `minimap`, `neural`, `solid`, `topo` or `halftone`. Add `logo: image("docs/attachments/logo.png")` for your logo.
+- **Header and footer:** each slot (`left`, `center`, `right`) takes `"title"`, `"chapter"`, `"section"`, `"author"`, `"date"`, `"version"`, `"page"`, `"page-total"` or any text.
+- **Printing double-sided:** add `mirror: true, chapter-start: "odd"`.
+
+The layout comes from the [ilkman](https://typst.app/universe/package/ilkman) package; its page lists every option. Callouts are drawn as ilkman notes by the `callout` function in `main.typ`.
+
+> Want the plain report layout instead? Switch to the `main` branch, or copy its `main.typ` and `.fonts/` folder over.
 
 ### Which notes go in
 
@@ -340,7 +362,7 @@ Options you can add inside `render_markdown(...)`:
 
 ### References and AI disclosure
 
-The rest of `main.typ` adds the reference list (IEEE style, from `citations/references.bib`) and the `docs/AI Disclosure.md` page. To use a different citation style, change `style: "ieee"` to, for example, `"apa"` or `"harvard-cite-them-right"`. To remove a section, delete its block.
+The rest of `main.typ` adds the reference list (IEEE style, from `citations/references.bib`) and, as Appendix A, the `docs/AI Disclosure.md` page. To use a different citation style, change `style: "ieee"` to, for example, `"apa"` or `"harvard-cite-them-right"`. To remove a section, delete its block.
 
 ---
 
@@ -471,7 +493,7 @@ Some things only work one way afterwards: Obsidian opens `#heading` links at the
 ├── citations/
 │   └── references.bib    ← your sources (kept by Zotero)
 ├── templates/            ← snippets for Alt + I
-├── .fonts/               ← PDF fonts (Ubuntu, Vollkorn) + licences
+├── .fonts/               ← PDF fonts (IBM Plex) + licence
 ├── .obsidian.default/    ← recommended Obsidian settings
 ├── .obsidian/            ← your Obsidian settings (not in git)
 ├── .cache/               ← web images, Mermaid (not in git)
