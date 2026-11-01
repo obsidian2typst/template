@@ -377,7 +377,8 @@ format() {
     local tools="$HOME/.cache/obsidian-typ-prettier"
     mkdir -p "$tools"
     echo '{ "plugins": ["mermaid-formatter/prettier-plugin"] }' > "$tools/.prettierrc"
-    if ! npm install --prefix "$tools" --silent prettier mermaid-formatter; then
+    # Major versions are pinned: the options below need Prettier 3, and 0.x plugins can break on minor releases
+    if ! npm install --prefix "$tools" --silent prettier@3 mermaid-formatter@0.3; then
         [ "$1" = --github ] && { echo "Warning: skipped prettier (npm install failed)." >&2; return 0; }
         die "npm install failed."
     fi
@@ -385,8 +386,12 @@ format() {
     local vault notes=() f
     vault=$(pwd)
     while IFS= read -r f; do notes+=("$vault/${f#./}"); done < <(find_notes)
-    (cd "$tools" && ./node_modules/.bin/prettier --config .prettierrc --log-level warn --write "${notes[@]}") \
-        && echo "Formatted ${#notes[@]} notes."
+    [ ${#notes[@]} -gt 0 ] || { echo "No notes to format."; return 0; }
+    if ! (cd "$tools" && ./node_modules/.bin/prettier --config .prettierrc --log-level warn --write "${notes[@]}"); then
+        [ "$1" = --github ] && echo "The GitHub conversion above was still saved." >&2
+        die "prettier failed (see the messages above)."
+    fi
+    echo "Formatted ${#notes[@]} notes."
 }
 
 menu() {
