@@ -7,13 +7,43 @@
 
 <!--typst-end-exclude-->
 
-![](</README.md>)
-
 # Introduction
 
-This manual is an example of what the template can do. It was written as plain notes in Obsidian [@ObsidianSharpenYour] and typeset with Typst [@Typst], which reads the markdown through the cmarker package [@CmarkerTypstUniverse]. Every feature shown in [@writing-your-manual] is written the same way you would write any other Obsidian note.
+This manual is an example of what the template can do. It was written as plain notes in Obsidian [@ObsidianSharpenYour] and typeset with Typst [@Typst], which reads the markdown through the cmarker package [@CmarkerTypstUniverse]. Every feature shown in [@writing-your-manual] is written the same way you would write any other Obsidian note. [@getting-started] and [@using-the-template] explain how to install and use the template.
 
 ![Background and Motivation](</docs/Background.md>)
+
+# Getting Started
+
+This chapter takes you from an empty computer to your first PDF. Follow the sections in order and copy the commands exactly.
+
+![](</docs/guide/Installing the Tools.md>)
+
+![](</docs/guide/Getting the Template.md>)
+
+![](</docs/guide/Setting Up Obsidian.md>)
+
+![](</docs/guide/Building the PDF.md>)
+
+# Using the Template
+
+Once the first PDF builds, this chapter covers the rest: organising a longer document, changing the layout, citations and the other toolbox commands.
+
+![](</docs/guide/Organising Your Notes.md>)
+
+![](</docs/guide/Customising the Layout.md>)
+
+![](</docs/guide/Citations with Zotero.md>)
+
+![](</docs/guide/Templates and Hotkeys.md>)
+
+![](</docs/guide/Web Images and Mermaid Diagrams.md>)
+
+![](</docs/guide/Formatting and GitHub Export.md>)
+
+![](</docs/guide/Syntax Quick Reference.md>)
+
+![](</docs/guide/Troubleshooting.md>)
 
 # Writing Your Manual
 
