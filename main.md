@@ -7,6 +7,8 @@
 
 <!--typst-end-exclude-->
 
+![](</README.md>)
+
 # Introduction
 
 This manual is an example of what the template can do. It was written as plain notes in Obsidian [@ObsidianSharpenYour] and typeset with Typst [@Typst], which reads the markdown through the cmarker package [@CmarkerTypstUniverse]. Every feature shown in [@writing-your-manual] is written the same way you would write any other Obsidian note.
