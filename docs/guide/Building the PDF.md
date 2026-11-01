@@ -8,6 +8,8 @@ Every command in this manual is run from a terminal opened **inside the vault fo
 - **macOS:** right-click the folder in Finder and choose **New Terminal at Folder**. If that option is missing, open Terminal, type `cd ` (with a space), drag the folder into the window and press Enter.
 - **Linux:** right-click in the folder and choose **Open in Terminal**.
 
+<!--raw-typst #pagebreak()-->
+
 # Building Once
 
 ```bash
