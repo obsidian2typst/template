@@ -386,7 +386,7 @@ Other hotkeys set by the recommended settings:
 
 | Hotkey | Action |
 | --- | --- |
-| `Ctrl/Cmd + `` ` `` | Toggle between source and live preview |
+| `` Ctrl/Cmd + ` `` | Toggle between source and live preview |
 | `Ctrl/Cmd + Esc` | Toggle Vim mode (only with the extras installed) |
 
 ---
@@ -460,23 +460,25 @@ Some things only work one way afterwards: Obsidian opens `#heading` links at the
 
 ```
 .
-├── main.md               ← your document (start writing here)
-├── main.typ              ← PDF settings: title page, which files, references
-├── main.pdf              ← the output (created by toolbox.sh, not committed to git)
-├── obsidian.typ          ← the Obsidian → Typst converter (no need to touch)
-├── docs/                 ← your other notes, embedded into main.md
-│   ├── Background.md, Callouts.md, … ← example sections (replace with your own)
+├── main.md               ← your document (start here)
+├── main.typ              ← PDF settings and title page
+├── main.pdf              ← the output (not in git)
+├── obsidian.typ          ← Obsidian → Typst converter
+├── docs/                 ← other notes, embedded in main.md
+│   ├── Background.md, …  ← example sections (replace them)
 │   ├── AI Disclosure.md  ← AI usage disclosure page
-│   └── attachments/      ← images (created automatically when you paste one)
+│   └── attachments/      ← images you paste into notes
 ├── citations/
-│   └── references.bib    ← your sources (kept updated by Zotero)
+│   └── references.bib    ← your sources (kept by Zotero)
 ├── templates/            ← snippets for Alt + I
-├── .fonts/               ← fonts used in the PDF (Ubuntu, Vollkorn) and their licences
-├── .obsidian.default/    ← recommended Obsidian settings and plugin settings
-├── .obsidian/            ← your own Obsidian settings and plugins (created by setup, not committed to git)
-├── .cache/               ← downloaded web images and rendered Mermaid diagrams (created by toolbox.sh, not committed)
-└── toolbox.sh            ← build / watch the PDF, set up Obsidian, format markdown, download web images
+├── .fonts/               ← PDF fonts (Ubuntu, Vollkorn) + licences
+├── .obsidian.default/    ← recommended Obsidian settings
+├── .obsidian/            ← your Obsidian settings (not in git)
+├── .cache/               ← web images, Mermaid (not in git)
+└── toolbox.sh            ← build, watch, setup, format
 ```
+
+Everything marked *not in git* is created on each computer: `main.pdf` and `.cache/` by `./toolbox.sh build`, `.obsidian/` by `./toolbox.sh setup`. You never need to edit `obsidian.typ`.
 
 Suggested way to organise a bigger document:
 

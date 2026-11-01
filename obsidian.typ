@@ -552,9 +552,24 @@
 // =============================================================================================
 // Headings and embedded notes (PDF)
 // =============================================================================================
+// Code fences (CommonMark): a block opened by N backticks/tildes only closes on a line of at
+// least N of the same character, so ````markdown can show a ```mermaid example inside it.
+// Returns the open fence ("```", "````", "~~~", …) or none.
+#let fence-of(trimmed) = {
+  let m = trimmed.match(regex("^(`{3,}|~{3,})"))
+  if m == none { none } else { m.captures.at(0) }
+}
+#let next-fence(fence, trimmed) = {
+  let f = fence-of(trimmed)
+  if f == none { return fence }
+  if fence == none { return f }
+  let closes = f.first() == fence.first() and f.len() >= fence.len() and trimmed.slice(f.len()).trim() == ""
+  if closes { none } else { fence }
+}
+
 #let get-min-heading-level(raw-text) = {
   let min-h = 7
-  let in-code-block = false
+  let fence = none
   let in-exclude-block = false
   for line in raw-text.split("\n") {
     let trimmed = line.trim()
@@ -563,11 +578,10 @@
       if trimmed.contains("<!--typst-end-exclude-->") { in-exclude-block = false }
       continue
     }
-    if trimmed.starts-with("```") or trimmed.starts-with("~~~") {
-      in-code-block = not in-code-block
+    if fence != none or fence-of(trimmed) != none {
+      fence = next-fence(fence, trimmed)
       continue
     }
-    if in-code-block { continue }
     let h-match = line.match(regex("^ *(#{1,6}) +"))
     if h-match != none { min-h = calc.min(min-h, h-match.captures.at(0).len()) }
   }
@@ -576,12 +590,13 @@
 
 #let shift-markdown-headings(text, offset) = {
   if offset == 0 { return text }
-  let in-code-block = false
+  let fence = none
   let out = ()
   for line in text.split("\n") {
     let trimmed = line.trim()
-    if trimmed.starts-with("```") or trimmed.starts-with("~~~") { in-code-block = not in-code-block }
-    if not in-code-block {
+    let was-in-code = fence != none
+    fence = next-fence(fence, trimmed)
+    if not was-in-code and fence == none {
       line = line.replace(regex("^([ \t]*)(#{1,6})([ \t]+)"), m => {
         let (indent, hashes, space) = m.captures
         indent + ("#" * calc.min(calc.max(hashes.len() + offset, 1), 6)) + space
@@ -595,13 +610,15 @@
 // The part of a note under one heading: (heading text, text) or none
 #let extract-section(text, fragment) = {
   let lines = text.split("\n")
-  let in-code = false
+  let fence = none
   let start = none
   let level = 0
   let title = none
   for (i, line) in lines.enumerate() {
-    if line.trim().starts-with("```") or line.trim().starts-with("~~~") { in-code = not in-code }
-    if in-code { continue }
+    if fence != none or fence-of(line.trim()) != none {
+      fence = next-fence(fence, line.trim())
+      continue
+    }
     let h = line.match(regex("^ *(#{1,6}) +(.*?)\s*#*\s*$"))
     if h == none { continue }
     if start == none {
@@ -638,7 +655,7 @@
   let out-lines = ()
   let footnotes = ()
   let current-h = base-h
-  let in-code-block = false
+  let fence = none
   let in-exclude-block = false
   let in-comment = false
   let in-figure = false
@@ -657,7 +674,7 @@
     }
 
     if mermaid-lines != none {
-      if trimmed.starts-with("```") or trimmed.starts-with("~~~") {
+      if next-fence("```", trimmed) == none {
         out-lines += replace-mermaid(mermaid-lines)
         mermaid-lines = none
       } else {
@@ -665,17 +682,13 @@
       }
       continue
     }
-    if not github and not in-code-block and not in-comment and trimmed.match(regex("^```\s*mermaid\s*$")) != none {
+    if not github and fence == none and not in-comment and trimmed.match(regex("^```\s*mermaid\s*$")) != none {
       mermaid-lines = ()
       continue
     }
 
-    if not in-comment and (trimmed.starts-with("```") or trimmed.starts-with("~~~")) {
-      in-code-block = not in-code-block
-      out-lines.push(line)
-      continue
-    }
-    if in-code-block {
+    if fence != none or (not in-comment and fence-of(trimmed) != none) {
+      fence = next-fence(fence, trimmed)
       out-lines.push(line)
       continue
     }

@@ -91,17 +91,28 @@ find_files() { find . \( -path './.*' -o -name node_modules \) -prune -o -type f
 # exactly like obsidian.typ does.
 scan_note() {
     awk -v prefix="$2" '
+    # Length of the ``` or ~~~ run starting t (0 if under 3). A fence opened with N characters
+    # only closes on N or more of the same character with nothing after, like CommonMark.
+    function fence_len(t,   c, n) {
+        c = substr(t, 1, 1); if (c != "`" && c != "~") return 0
+        n = 1; while (substr(t, n + 1, 1) == c) n++
+        return n >= 3 ? n : 0
+    }
+    function closes(t, open,   n, rest) {
+        n = fence_len(t); if (n < length(open) || substr(t, 1, 1) != substr(open, 1, 1)) return 0
+        rest = substr(t, n + 1); return rest ~ /^[ \t]*$/
+    }
     { sub(/\r$/, ""); line = $0; t = line; sub(/^[ \t]+/, "", t) }
     index(t, "<!--typst-begin-exclude-->") == 1 { inex = 1 }
     inex { if (index(t, "<!--typst-end-exclude-->")) inex = 0; next }
     inmer {
-        if (t ~ /^(```|~~~)/) { f = prefix (++n) ".mmd"; printf "%s", buf > f; close(f); print "M\t" f; inmer = 0 }
+        if (closes(t, "```")) { f = prefix (++n) ".mmd"; printf "%s", buf > f; close(f); print "M\t" f; inmer = 0 }
         else { buf = (nb++ ? buf "\n" : "") line }
         next
     }
-    infence { if (t ~ /^(```|~~~)/) infence = 0; next }
+    fence != "" { if (closes(t, fence)) fence = ""; next }
     t ~ /^```[ \t]*mermaid[ \t]*$/ { inmer = 1; buf = ""; nb = 0; next }
-    t ~ /^(```|~~~)/ { infence = 1; next }
+    fence_len(t) { fence = substr(t, 1, fence_len(t)); next }
     {
         gsub(/`[^`]*`/, "", line)
         s = line
