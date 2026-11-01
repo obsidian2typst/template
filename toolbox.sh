@@ -381,7 +381,12 @@ format() {
         [ "$1" = --github ] && { echo "Warning: skipped prettier (npm install failed)." >&2; return 0; }
         die "npm install failed."
     fi
-    "$tools/node_modules/.bin/prettier" --config "$tools/.prettierrc" --write "**/*.md"
+    # Prettier looks for plugins from the folder it runs in, so run it from $tools with full paths
+    local vault notes=() f
+    vault=$(pwd)
+    while IFS= read -r f; do notes+=("$vault/${f#./}"); done < <(find_notes)
+    (cd "$tools" && ./node_modules/.bin/prettier --config .prettierrc --log-level warn --write "${notes[@]}") \
+        && echo "Formatted ${#notes[@]} notes."
 }
 
 menu() {
